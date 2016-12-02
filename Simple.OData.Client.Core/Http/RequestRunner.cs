@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Simple.OData.Client
 {
@@ -30,6 +31,10 @@ namespace Simple.OData.Client
                 PreExecute(httpConnection.HttpClient, request);
 
                 _session.Trace("{0} request: {1}", request.Method, request.RequestMessage.RequestUri.AbsoluteUri);
+                if(request.EntryData != null && request.EntryData.Count > 0)
+                {
+                    _session.Trace("Payload: {0}", JsonConvert.SerializeObject(request.EntryData));
+                }
                 if (request.RequestMessage.Content != null && (_session.Settings.TraceFilter & ODataTrace.RequestContent) != 0)
                 {
                     var content = await request.RequestMessage.Content.ReadAsStringAsync();
